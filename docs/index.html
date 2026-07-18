@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One Picture A Day</title>
+<style>
+  :root {
+    --bg: #eef1ef;
+    --bg-alt: #e4e8e5;
+    --ink: #211c19;
+    --ink-soft: #5c554f;
+    --ink-faint: #8a827b;
+    --accent: #9c2b23;
+    --accent-soft: #c78882;
+    --rail: #bcc4c0;
+    --mat: #ffffff;
+    --mat-border: #d6dad7;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Consolas, "Liberation Mono", monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    margin: 0;
+    padding: 0 20px 120px;
+  }
+
+  .page { max-width: 880px; margin: 0 auto; }
+
+  .masthead {
+    padding: 72px 0 56px;
+    border-bottom: 1px solid var(--mat-border);
+    margin-bottom: 56px;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .eyebrow::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+  }
+
+  .masthead h1 {
+    font-size: clamp(2.4rem, 6vw, 3.4rem);
+    font-weight: 500;
+    margin: 0 0 14px;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  .bio {
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    max-width: 58ch;
+    line-height: 1.62;
+    margin: 0;
+  }
+
+  .timeline { position: relative; }
+
+  .timeline::before {
+    content: "";
+    position: absolute;
+    top: 6px;
+    bottom: 40px;
+    left: 41.5px;
+    width: 4px;
+    background-image: radial-gradient(circle, var(--rail) 1.6px, transparent 1.6px);
+    background-size: 4px 13px;
+    background-repeat: repeat-y;
+  }
+
+  .entry {
+    display: flex;
+    gap: 28px;
+    margin-bottom: 88px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .entry:last-child { margin-bottom: 32px; }
+
+  .marker { flex: 0 0 88px; padding-top: 4px; }
+
+  .marker .node {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+    position: relative;
+    left: 39px;
+    margin-bottom: 14px;
+  }
+
+  .marker time {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+
+  .marker .roll {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--ink-faint);
+    margin-top: 4px;
+    letter-spacing: 0.06em;
+  }
+
+  .content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    gap: 28px;
+    align-items: flex-start;
+  }
+
+  .frame {
+    flex: 1.2;
+    min-width: 0;
+    background: var(--mat);
+    border: 1px solid var(--mat-border);
+    border-radius: 14px;
+    padding: 10px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  }
+
+  .frame img { width: 100%; display: block; border-radius: 8px; }
+
+  .side { flex: 1; min-width: 0; padding-top: 4px; }
+
+  .album-block {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--mat-border);
+    margin-bottom: 16px;
+  }
+
+  .album-cover {
+    width: 52px;
+    height: 52px;
+    border-radius: 6px;
+    object-fit: cover;
+    flex-shrink: 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  }
+
+  .track-stub {
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    color: var(--ink-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .track-stub .label {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    font-size: 0.66rem;
+  }
+
+  .track-stub .track {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  a.track:hover { color: var(--accent); text-decoration: underline; }
+
+  .thought {
+    font-size: 1.02rem;
+    line-height: 1.68;
+    color: var(--ink);
+    font-style: italic;
+    margin: 0;
+  }
+
+  .thought::before {
+    content: "\201C";
+    color: var(--accent-soft);
+    font-style: normal;
+    margin-right: 2px;
+  }
+
+  footer {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    text-align: center;
+    padding-top: 24px;
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 700px) {
+    .content { flex-direction: column; }
+  }
+
+  @media (max-width: 560px) {
+    .timeline::before { left: 15px; }
+    .marker { flex: 0 0 34px; }
+    .marker .node { left: 11px; }
+    .marker time { position: absolute; top: -22px; left: 34px; white-space: nowrap; }
+    .marker .roll { display: none; }
+    .entry { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="masthead">
+    <div class="eyebrow">4 days told</div>
+    <h1>One Picture A Day</h1>
+    <p class="bio">Hi, I'm Silvano and nobody seems to agree on what to call me: some say Silvi, some Silva, my mom calls me Bibbi, my friends lately Slivio. <em>One Picture A Day</em> was born to bring together three things that, one way or another, define me: music, images and feels. All of it remixed by a few billion parameters.</p>
+  </header>
+
+  <div class="timeline">
+    
+    <article class="entry">
+      <div class="marker">
+        <div class="node"></div>
+        <time>17.07.26</time>
+        <span class="roll">fr. 04</span>
+      </div>
+      <div class="content">
+        <div class="frame">
+          <img src="images/2026-07-17.jpg" alt="Foto del giorno reinterpretata">
+        </div>
+        <div class="side">
+          <div class="album-block">
+            <img class="album-cover" src="https://i.scdn.co/image/ab67616d0000b2739ea7c8a96a35dc122fcbc621" alt="Copertina dell'album">
+            <div class="track-stub">
+              <span class="label">Listening to</span>
+              <a class="track" href="https://open.spotify.com/track/4C4P3bnPEDpyVCKZOWzg6I" target="_blank" rel="noopener">Royel Otis — moody</a>
+            </div>
+          </div>
+          <p class="thought">Packing, pretty excited about the next weeks, but vaccines yesterday make me peaky</p>
+        </div>
+      </div>
+    </article>
+    <article class="entry">
+      <div class="marker">
+        <div class="node"></div>
+        <time>15.07.26</time>
+        <span class="roll">fr. 03</span>
+      </div>
+      <div class="content">
+        <div class="frame">
+          <img src="images/2026-07-15.jpg" alt="Foto del giorno reinterpretata">
+        </div>
+        <div class="side">
+          <div class="album-block">
+            <img class="album-cover" src="https://i.scdn.co/image/ab67616d0000b273a934941a7276c5b72375b88e" alt="Copertina dell'album">
+            <div class="track-stub">
+              <span class="label">Listening to</span>
+              <a class="track" href="https://open.spotify.com/track/71x0LSsmZh2Y6jSSoQCcqn" target="_blank" rel="noopener">Rareș, iako — Giorni di sole (con iako)</a>
+            </div>
+          </div>
+          <p class="thought">What a joy to see them again, I&#x27;m truly lucky to have them.</p>
+        </div>
+      </div>
+    </article>
+    <article class="entry">
+      <div class="marker">
+        <div class="node"></div>
+        <time>12.07.26</time>
+        <span class="roll">fr. 02</span>
+      </div>
+      <div class="content">
+        <div class="frame">
+          <img src="images/2026-07-12.jpg" alt="Foto del giorno reinterpretata">
+        </div>
+        <div class="side">
+          <div class="album-block">
+            <img class="album-cover" src="https://i.scdn.co/image/ab67616d0000b273927ee510cae02a0334d3207c" alt="Copertina dell'album">
+            <div class="track-stub">
+              <span class="label">Listening to</span>
+              <a class="track" href="https://open.spotify.com/track/63NhLtWQ6UxCRIu1k8uSwQ" target="_blank" rel="noopener">Charli xcx, Bon Iver — I think about it all the time (feat. Bon Iver)</a>
+            </div>
+          </div>
+          <p class="thought">I don&#x27;t know where to go and it&#x27;s freakin&#x27; hot.</p>
+        </div>
+      </div>
+    </article>
+    <article class="entry">
+      <div class="marker">
+        <div class="node"></div>
+        <time>10.07.26</time>
+        <span class="roll">fr. 01</span>
+      </div>
+      <div class="content">
+        <div class="frame">
+          <img src="images/2026-07-10.jpg" alt="Foto del giorno reinterpretata">
+        </div>
+        <div class="side">
+          <div class="album-block">
+            <img class="album-cover" src="https://i.scdn.co/image/ab67616d0000b273b5e4b3242255f8556e22ba35" alt="Copertina dell'album">
+            <div class="track-stub">
+              <span class="label">Listening to</span>
+              <a class="track" href="https://open.spotify.com/track/0QWtK5weG5oox2YwIHZnx7" target="_blank" rel="noopener">chiello — Amici stretti</a>
+            </div>
+          </div>
+          <p class="thought">Marco is changing jobs, and I&#x27;m a little sad about not having him on the team every day anymore. We&#x27;ve teased each other, hugged, and scolded each other the way only close friends do. But I&#x27;m really happy for him, for his goals, for the new path ahead. Good luck, my friend.</p>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <footer>end of roll, development continues</footer>
+</div>
+</body>
+</html>
